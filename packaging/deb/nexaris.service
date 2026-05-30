@@ -1,0 +1,14 @@
+[Unit]
+Description=Nexaris Stack Runtime Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/lib/nexaris/runtime.sh start
+ExecStop=/usr/lib/nexaris/runtime.sh stop
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target

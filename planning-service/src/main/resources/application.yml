@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: planning-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+springdoc:
+  api-docs:
+    path: /api/v1/planning/api-docs
+  swagger-ui:
+    path: /api/v1/planning/swagger-ui.html
+
+app:
+  gateway-url: ${GATEWAY_URL}
+
+gateway:
+  internal:
+    secret: ${GATEWAY_INTERNAL_SECRET}

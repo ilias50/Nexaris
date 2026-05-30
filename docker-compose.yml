@@ -1,0 +1,187 @@
+services:
+  # --- BASE DE DONNÉES ---
+  nexaris-db:
+    image: mysql:9.6
+    container_name: nexaris-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      AUTH_DB_NAME: ${AUTH_DB_NAME}
+      ORG_DB_NAME: ${ORG_DB_NAME}
+      PLANNING_DB_NAME: ${PLANNING_DB_NAME}
+      HOLIDAY_PROXY_DB_NAME: ${HOLIDAY_PROXY_DB_NAME}
+      NOTIFICATION_DB_NAME: ${NOTIFICATION_DB_NAME}
+    ports:
+      - "3306:3306"
+    volumes:
+      - nexaris-db-data:/var/lib/mysql
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nexaris-network
+
+  # --- SERVICES BACKEND (Chacun avec son Dockerfile local) ---
+
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    container_name: nexaris-auth
+    user: "0:0"
+    environment:
+      - SPRING_DATASOURCE_URL=${AUTH_DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - GATEWAY_INTERNAL_SECRET=${GATEWAY_INTERNAL_SECRET}
+      - SERVICE_TOKEN=${SERVICE_TOKEN}
+      - GATEWAY_URL=${GATEWAY_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRATION=${JWT_EXPIRATION}
+      - APP_BOOTSTRAP_ADMIN_EMAIL=${APP_BOOTSTRAP_ADMIN_EMAIL}
+      - APP_BOOTSTRAP_ADMIN_PASSWORD=${APP_BOOTSTRAP_ADMIN_PASSWORD}
+      - APP_BOOTSTRAP_ADMIN_FIRST_NAME=${APP_BOOTSTRAP_ADMIN_FIRST_NAME:-System}
+      - APP_BOOTSTRAP_ADMIN_LAST_NAME=${APP_BOOTSTRAP_ADMIN_LAST_NAME:-Admin}
+      - PROFILE_IMAGES_DIR=/tmp/nexaris/uploads/profile-images
+      - NOTIFICATION_SERVICE_URL=${NOTIFICATION_SERVICE_URL}
+      - NOTIFICATION_EMAIL_ENDPOINT=${NOTIFICATION_EMAIL_ENDPOINT}
+    ports:
+      - "8081:8080"
+    volumes:
+      - auth-uploads-data:/tmp/nexaris/uploads
+    depends_on:
+      nexaris-db:
+        condition: service_healthy
+    networks:
+      - nexaris-network
+
+  org-service:
+    build:
+      context: ./org-service
+      dockerfile: Dockerfile
+    container_name: nexaris-org
+    environment:
+      - SPRING_DATASOURCE_URL=${ORG_DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - GATEWAY_URL=${GATEWAY_URL}
+      - GATEWAY_INTERNAL_SECRET=${GATEWAY_INTERNAL_SECRET}
+    depends_on:
+      nexaris-db:
+        condition: service_healthy
+    networks:
+      - nexaris-network
+
+
+  planning-service:
+    build:
+      context: ./planning-service
+      dockerfile: Dockerfile
+    container_name: nexaris-planning
+    environment:
+      - SPRING_DATASOURCE_URL=${PLANNING_DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - GATEWAY_URL=${GATEWAY_URL}
+      - GATEWAY_INTERNAL_SECRET=${GATEWAY_INTERNAL_SECRET}
+      - SERVICE_TOKEN=${SERVICE_TOKEN}
+      - NOTIFICATION_SERVICE_URL=${NOTIFICATION_SERVICE_URL}
+    depends_on:
+      nexaris-db:
+        condition: service_healthy
+    networks:
+      - nexaris-network
+
+  holiday-proxy-service:
+    build:
+      context: ./holiday-proxy-service
+      dockerfile: Dockerfile
+    container_name: nexaris-holiday-proxy
+    environment:
+      - SPRING_DATASOURCE_URL=${HOLIDAY_PROXY_DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - GATEWAY_INTERNAL_SECRET=${GATEWAY_INTERNAL_SECRET}
+      - HOLIDAY_PROVIDER_MODE=${HOLIDAY_PROVIDER_MODE:-external}
+      - HOLIDAY_PROVIDER_FALLBACK_TO_MOCK=${HOLIDAY_PROVIDER_FALLBACK_TO_MOCK:-true}
+      - HOLIDAY_EXTERNAL_BASE_URL=${HOLIDAY_EXTERNAL_BASE_URL}
+      - HOLIDAY_EXTERNAL_PUBLIC_HOLIDAYS_PATH=${HOLIDAY_EXTERNAL_PUBLIC_HOLIDAYS_PATH}
+    depends_on:
+      nexaris-db:
+        condition: service_healthy
+    networks:
+      - nexaris-network
+
+  notification-service:
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
+    container_name: nexaris-notification
+    environment:
+      - SPRING_DATASOURCE_URL=${NOTIFICATION_DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - GATEWAY_INTERNAL_SECRET=${GATEWAY_INTERNAL_SECRET}
+      - SERVICE_TOKEN=${SERVICE_TOKEN}
+      - SPRING_MAIL_HOST=${SPRING_MAIL_HOST}
+      - SPRING_MAIL_PORT=${SPRING_MAIL_PORT}
+      - SPRING_MAIL_USERNAME=${SPRING_MAIL_USERNAME}
+      - SPRING_MAIL_PASSWORD=${SPRING_MAIL_PASSWORD}
+      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_SSL_TRUST=${SPRING_MAIL_PROPERTIES_MAIL_SMTP_SSL_TRUST}
+      - NOTIFICATION_MAIL_DEFAULT_FROM=${NOTIFICATION_MAIL_DEFAULT_FROM}
+      - GATEWAY_URL=${GATEWAY_URL}
+    depends_on:
+      nexaris-db:
+        condition: service_healthy
+    networks:
+      - nexaris-network
+
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: nexaris-gateway
+    environment:
+      - GATEWAY_INTERNAL_SECRET=${GATEWAY_INTERNAL_SECRET}
+      - SERVICE_TOKEN=${SERVICE_TOKEN}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRATION=${JWT_EXPIRATION}
+      - AUTH_SERVICE_URI=${AUTH_SERVICE_URI}
+      - NOTIFICATION_SERVICE_URI=${NOTIFICATION_SERVICE_URI}
+      - ORG_SERVICE_URI=${ORG_SERVICE_URI}
+      - HOLIDAY_PROXY_SERVICE_URI=${HOLIDAY_PROXY_SERVICE_URI}
+      - PLANNING_SERVICE_URI=${PLANNING_SERVICE_URI}
+    ports:
+      - "8080:8080"
+    depends_on:
+      auth-service:
+        condition: service_started
+    networks:
+      - nexaris-network
+
+  # --- FRONTEND ---
+  frontend:
+    build:
+      context: ./nexaris-frontend
+      dockerfile: Dockerfile
+    container_name: nexaris-vue-app
+    environment:
+      - GATEWAY_URL=${GATEWAY_URL}
+    ports:
+      - "80:80"
+    depends_on:
+      - gateway
+    networks:
+      - nexaris-network
+
+networks:
+  nexaris-network:
+    driver: bridge
+
+volumes:
+  nexaris-db-data:
+  auth-uploads-data:

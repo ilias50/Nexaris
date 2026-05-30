@@ -1,0 +1,86 @@
+server:
+  port: 8080
+
+gateway:
+  internal:
+    secret: ${GATEWAY_INTERNAL_SECRET}
+  auth:
+    verify-token-uri: ${AUTH_SERVICE_URI}/api/v1/auth/verify-token
+
+service:
+  token: ${SERVICE_TOKEN}
+
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      server:
+        webflux:
+          globalcors:
+            cors-configurations:
+              '[/**]':
+                # 🟢 Indiquer l'origine exacte du front-end
+                # allowedOrigins: "http:/localhost:8084"
+                # Alternative si vous voulez autoriser toutes les origines (moins sécurisé) :
+                allowedOriginPatterns: "*"
+                allowedMethods:
+                  - GET
+                  - POST
+                  - PUT
+                  - DELETE
+                  - OPTIONS
+                  - PATCH
+                allowedHeaders: "*"
+                allowCredentials: true
+          routes:
+            - id: auth_internal_route
+              uri: ${AUTH_SERVICE_URI}
+              predicates:
+                - Path=/api/v1/auth/internal/**
+              filters:
+                - ServiceTokenFilter
+            - id: auth_route
+              uri: ${AUTH_SERVICE_URI}
+              predicates:
+                - Path=/api/v1/auth/**
+              filters:
+                - InternalSecretFilter
+            - id: notification_internal_route
+              uri: ${NOTIFICATION_SERVICE_URI}
+              predicates:
+                - Path=/api/v1/notifications/email,/api/v1/notifications/send-bulk
+              filters:
+                - InternalSecretFilter
+            - id: notification_route
+              uri: ${NOTIFICATION_SERVICE_URI}
+              predicates:
+                - Path=/api/v1/notifications/**
+              filters:
+                - AuthenticationFilter
+            - id: org_internal_route
+              uri: ${ORG_SERVICE_URI}
+              predicates:
+                - Path=/api/v1/org/internal/**
+              filters:
+                - ServiceTokenFilter
+                - InternalSecretFilter
+            - id: holiday_proxy_route
+              uri: ${HOLIDAY_PROXY_SERVICE_URI}
+              predicates:
+                - Path=/api/v1/holidays/**
+              filters:
+                - AuthenticationFilter
+            - id: org_route
+              uri: ${ORG_SERVICE_URI}
+              predicates:
+                - Path=/api/v1/org/**
+              filters:
+                - AuthenticationFilter
+            - id: planning_route
+              uri: ${PLANNING_SERVICE_URI}
+              predicates:
+                - Path=/api/v1/planning/**
+              filters:
+                - AuthenticationFilter

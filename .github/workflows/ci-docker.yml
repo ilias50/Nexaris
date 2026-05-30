@@ -1,0 +1,134 @@
+name: CI and Docker Images
+
+on:
+  pull_request:
+    branches:
+      - "**"
+  push:
+    branches:
+      - "**"
+    tags:
+      - "v*"
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  backend-tests:
+    name: Backend Tests (Maven)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: maven
+
+      - name: Run Maven tests
+        run: mvn -B -ntp test
+
+  frontend-checks:
+    name: Frontend Build and Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: nexaris-frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: nexaris-frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check
+        run: npm run type-check
+
+      - name: Build frontend
+        run: npm run build-only
+
+      - name: Run unit tests
+        run: npm run test:unit -- --run
+
+  docker-images:
+    name: Build and Push Docker Images
+    runs-on: ubuntu-latest
+    needs:
+      - backend-tests
+      - frontend-checks
+    if: github.event_name == 'push'
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - image_name: nexaris-auth-service
+            context: ./auth-service
+            dockerfile: ./auth-service/Dockerfile
+          - image_name: nexaris-gateway
+            context: ./gateway
+            dockerfile: ./gateway/Dockerfile
+          - image_name: nexaris-holiday-proxy-service
+            context: ./holiday-proxy-service
+            dockerfile: ./holiday-proxy-service/Dockerfile
+          - image_name: nexaris-notification-service
+            context: ./notification-service
+            dockerfile: ./notification-service/Dockerfile
+          - image_name: nexaris-org-service
+            context: ./org-service
+            dockerfile: ./org-service/Dockerfile
+          - image_name: nexaris-planning-service
+            context: ./planning-service
+            dockerfile: ./planning-service/Dockerfile
+          - image_name: nexaris-frontend
+            context: ./nexaris-frontend
+            dockerfile: ./nexaris-frontend/Dockerfile
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.image_name }}
+          tags: |
+            type=sha
+            type=ref,event=branch
+            type=ref,event=tag
+            type=semver,pattern={{version}},value=${{ github.ref_name }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ github.ref_name }}
+            type=semver,pattern={{major}},value=${{ github.ref_name }}
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

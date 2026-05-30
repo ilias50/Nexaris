@@ -1,0 +1,223 @@
+/* ---- Reset & base globale Nexaris ---- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --color-primary: #1a56db;
+  --color-primary-dark: #1446b8;
+  --color-sidebar-bg: #1e293b;
+  --color-sidebar-text: #94a3b8;
+  --color-sidebar-active: #334155;
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;
+  --color-text: #1e293b;
+  --color-text-muted: #64748b;
+  --color-border: #e2e8f0;
+  --color-danger: #dc2626;
+  --color-success: #16a34a;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --transition: 0.15s ease;
+  /* composants */
+  --color-input-disabled: #f1f5f9;
+  --color-secondary-hover: #cbd5e1;
+  --color-danger-dark: #b91c1c;
+  /* feedback banners */
+  --color-info-text: #1e40af;
+  --color-info-bg: #eff6ff;
+  --color-info-border: #bfdbfe;
+  --color-feedback-success-text: #065f46;
+  --color-feedback-success-bg: #ecfdf5;
+  --color-feedback-success-border: #a7f3d0;
+  --color-feedback-error-text: #b91c1c;
+  --color-feedback-error-bg: #fef2f2;
+  --color-feedback-error-border: #fecaca;
+  /* notification bell */
+  --color-notif-surface: #ffffff;
+  --color-notif-border: #e5e7eb;
+  --color-notif-item-border: #f3f4f6;
+  --color-notif-unread-bg: #eff6ff;
+  --color-notif-hover-bg: #f9fafb;
+  --color-notif-badge: #ef4444;
+  --color-notif-link: #3b82f6;
+  --color-notif-link-hover: #1d4ed8;
+  --color-notif-empty: #9ca3af;
+  --color-notif-title: #1f2937;
+  --color-notif-body: #6b7280;
+  --color-notif-time: #9ca3af;
+  --color-notif-footer-bg: #f3f4f6;
+  --color-notif-footer-hover: #f3f4f6;
+}
+
+html[data-theme="dark"] {
+  --color-primary: #3b82f6;
+  --color-primary-dark: #2563eb;
+  --color-sidebar-bg: #0f172a;
+  --color-sidebar-text: #64748b;
+  --color-sidebar-active: #1e293b;
+  --color-bg: #0f172a;
+  --color-surface: #1e293b;
+  --color-text: #e2e8f0;
+  --color-text-muted: #94a3b8;
+  --color-border: #334155;
+  --color-danger: #ef4444;
+  --color-success: #22c55e;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --color-input-disabled: #0f172a;
+  --color-secondary-hover: #475569;
+  --color-danger-dark: #dc2626;
+  --color-info-text: #93c5fd;
+  --color-info-bg: #1e3a5f;
+  --color-info-border: #1e40af;
+  --color-feedback-success-text: #86efac;
+  --color-feedback-success-bg: #052e16;
+  --color-feedback-success-border: #166534;
+  --color-feedback-error-text: #fca5a5;
+  --color-feedback-error-bg: #450a0a;
+  --color-feedback-error-border: #7f1d1d;
+  --color-notif-surface: #1e293b;
+  --color-notif-border: #334155;
+  --color-notif-item-border: #263347;
+  --color-notif-unread-bg: #1e3a5f;
+  --color-notif-hover-bg: #263347;
+  --color-notif-badge: #ef4444;
+  --color-notif-link: #60a5fa;
+  --color-notif-link-hover: #93c5fd;
+  --color-notif-empty: #64748b;
+  --color-notif-title: #e2e8f0;
+  --color-notif-body: #94a3b8;
+  --color-notif-time: #64748b;
+  --color-notif-footer-bg: #0f172a;
+  --color-notif-footer-hover: #1e293b;
+  --color-soft: rgba(30, 41, 59, 0.8);
+}
+
+body {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* scrollbar discrète */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 99px;
+}
+
+/* utilitaires */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (hover: hover) {
+  a:hover {
+    opacity: 0.85;
+  }
+}
+
+/* admin shared ui */
+.nx-admin-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1.15rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.nx-admin-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.nx-admin-subtitle {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.nx-admin-subtitle-sm {
+  margin-bottom: 0.55rem;
+}
+
+.nx-admin-info {
+  font-size: 0.9rem;
+  color: var(--color-info-text);
+  background: var(--color-info-bg);
+  border: 1px solid var(--color-info-border);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.65rem;
+}
+
+.nx-admin-success {
+  margin-top: 0.7rem;
+  font-size: 0.85rem;
+  color: var(--color-feedback-success-text);
+  background: var(--color-feedback-success-bg);
+  border: 1px solid var(--color-feedback-success-border);
+  border-radius: var(--radius-sm);
+  padding: 0.45rem 0.6rem;
+}
+
+.nx-admin-error {
+  margin-top: 0.7rem;
+  font-size: 0.85rem;
+  color: var(--color-feedback-error-text);
+  background: var(--color-feedback-error-bg);
+  border: 1px solid var(--color-feedback-error-border);
+  border-radius: var(--radius-sm);
+  padding: 0.45rem 0.6rem;
+}
+
+@media (max-width: 768px) {
+  .nx-admin-card {
+    padding: 1rem;
+  }
+}
+

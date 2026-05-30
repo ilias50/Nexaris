@@ -1,0 +1,5 @@
+# Runtime du service nexaris.service
+# none    -> le .deb n'orchestre rien (gestion manuelle/libre)
+# compose -> orchestration Docker Compose via /opt/nexaris/docker-compose.yml
+# native  -> services Java lances en natif via systemd
+RUNTIME_MODE=native

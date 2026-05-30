@@ -1,0 +1,54 @@
+# Secrets and local environment
+.env
+.env.local
+.env.*.local
+
+# Maven/Java build outputs
+**/target/
+*.jar
+*.war
+*.ear
+*.class
+
+# Frontend dependencies and build outputs
+**/node_modules/
+**/dist/
+**/.vite/
+
+# Logs
+**/logs/
+*.log
+
+# IDE / OS
+.idea/
+.vscode/
+*.iml
+.settings/
+.project
+.classpath
+.factorypath
+.DS_Store
+Thumbs.db
+
+# Python cache (for helper scripts/tests)
+**/__pycache__/
+*.pyc
+.python-version
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.venv/
+**/.venv/
+venv/
+**/venv/
+
+# Test/coverage outputs
+.coverage
+coverage.xml
+htmlcov/
+
+# Temporary files
+*.tmp
+*.swp

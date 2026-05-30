@@ -1,0 +1,68 @@
+{
+  "FR": {
+    "2026": {
+      "holidays": [
+        {
+          "date": "2026-01-01",
+          "name": "New Year",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2026-04-06",
+          "name": "Easter Monday",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2026-05-01",
+          "name": "Labour Day",
+          "type": "PUBLIC_HOLIDAY"
+        }
+      ],
+      "schoolVacations": [
+        {
+          "date": "2026-02-16",
+          "name": "Winter Break",
+          "type": "SCHOOL_VACATION"
+        },
+        {
+          "date": "2026-07-01",
+          "name": "Summer Break",
+          "type": "SCHOOL_VACATION"
+        }
+      ]
+    }
+  },
+  "BE": {
+    "2026": {
+      "holidays": [
+        {
+          "date": "2026-01-01",
+          "name": "New Year",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2026-04-06",
+          "name": "Easter Monday",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2026-07-21",
+          "name": "National Day",
+          "type": "PUBLIC_HOLIDAY"
+        }
+      ],
+      "schoolVacations": [
+        {
+          "date": "2026-02-23",
+          "name": "Carnival Break",
+          "type": "SCHOOL_VACATION"
+        },
+        {
+          "date": "2026-07-01",
+          "name": "Summer Break",
+          "type": "SCHOOL_VACATION"
+        }
+      ]
+    }
+  }
+}

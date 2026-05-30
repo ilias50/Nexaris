@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: holiday-proxy-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+gateway:
+  internal:
+    secret: ${GATEWAY_INTERNAL_SECRET}
+
+holiday:
+  default-country: FR
+  provider:
+    mode: ${HOLIDAY_PROVIDER_MODE:external}
+    fallback-to-mock: ${HOLIDAY_PROVIDER_FALLBACK_TO_MOCK:true}
+  external:
+    base-url: ${HOLIDAY_EXTERNAL_BASE_URL}
+    public-holidays-path: ${HOLIDAY_EXTERNAL_PUBLIC_HOLIDAYS_PATH}
+
+springdoc:
+  api-docs:
+    path: /api/v1/holidays/api-docs
+  swagger-ui:
+    path: /api/v1/holidays/swagger-ui.html
