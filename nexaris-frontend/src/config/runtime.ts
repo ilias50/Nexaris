@@ -17,5 +17,5 @@ export function getRuntimeConfig(): NexarisRuntimeConfig {
 }
 
 export function getApiBaseUrl() {
-  return getRuntimeConfig().apiBaseUrl ?? import.meta.env.VITE_API_BASE_URL ?? ''
+  return getRuntimeConfig().apiBaseUrl ?? import.meta.env.VITE_API_URL ?? ''
 }

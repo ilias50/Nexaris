@@ -32,7 +32,6 @@ services:
       context: ./auth-service
       dockerfile: Dockerfile
     container_name: nexaris-auth
-    user: "0:0"
     environment:
       - SPRING_DATASOURCE_URL=${AUTH_DB_URL}
       - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
@@ -46,13 +45,13 @@ services:
       - APP_BOOTSTRAP_ADMIN_PASSWORD=${APP_BOOTSTRAP_ADMIN_PASSWORD}
       - APP_BOOTSTRAP_ADMIN_FIRST_NAME=${APP_BOOTSTRAP_ADMIN_FIRST_NAME:-System}
       - APP_BOOTSTRAP_ADMIN_LAST_NAME=${APP_BOOTSTRAP_ADMIN_LAST_NAME:-Admin}
-      - PROFILE_IMAGES_DIR=/tmp/nexaris/uploads/profile-images
+      - PROFILE_IMAGES_DIR=/data/profile-images
       - NOTIFICATION_SERVICE_URL=${NOTIFICATION_SERVICE_URL}
       - NOTIFICATION_EMAIL_ENDPOINT=${NOTIFICATION_EMAIL_ENDPOINT}
     ports:
       - "8081:8080"
     volumes:
-      - auth-uploads-data:/tmp/nexaris/uploads
+      - ./auth-service/data/profile-images:/data/profile-images
     depends_on:
       nexaris-db:
         condition: service_healthy
@@ -173,6 +172,7 @@ services:
       - GATEWAY_URL=${GATEWAY_URL}
     ports:
       - "80:80"
+      - "443:443"
     depends_on:
       - gateway
     networks:
@@ -184,4 +184,3 @@ networks:
 
 volumes:
   nexaris-db-data:
-  auth-uploads-data:

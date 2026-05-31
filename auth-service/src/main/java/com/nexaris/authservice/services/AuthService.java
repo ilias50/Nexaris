@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -370,8 +371,18 @@ public class AuthService {
         }
 
         String contentType = file.getContentType();
-        if (contentType == null || !contentType.startsWith("image/")) {
+        if (contentType == null || !contentType.toLowerCase(Locale.ROOT).startsWith("image/")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Le fichier doit être une image");
+        }
+
+        DetectedImageFormat detectedFormat = detectImageFormat(file);
+        if (detectedFormat == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Format d'image non supporte");
+        }
+
+        String normalizedContentType = normalizeContentType(contentType);
+        if (!normalizedContentType.equals(detectedFormat.contentType())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Le type de fichier ne correspond pas au contenu de l'image");
         }
 
         if (file.getSize() > MAX_PROFILE_IMAGE_SIZE) {
@@ -384,7 +395,7 @@ public class AuthService {
             Files.createDirectories(profileImageDirectory);
             deleteExistingProfileImageFile(userId);
 
-            String extension = resolveExtension(contentType);
+            String extension = detectedFormat.extension();
             String fileName = "user-" + userId + extension;
             Path filePath = profileImageDirectory.resolve(fileName).normalize();
             file.transferTo(filePath);
@@ -460,14 +471,79 @@ public class AuthService {
         }
     }
 
-    private String resolveExtension(String contentType) {
-        return switch (contentType.toLowerCase()) {
-            case "image/png" -> ".png";
-            case "image/webp" -> ".webp";
-            case "image/gif" -> ".gif";
-            default -> ".jpg";
-        };
+    private DetectedImageFormat detectImageFormat(MultipartFile file) {
+        try (InputStream inputStream = file.getInputStream()) {
+            byte[] header = inputStream.readNBytes(12);
+
+            if (isPng(header)) {
+                return new DetectedImageFormat(".png", "image/png");
+            }
+            if (isJpeg(header)) {
+                return new DetectedImageFormat(".jpg", "image/jpeg");
+            }
+            if (isGif(header)) {
+                return new DetectedImageFormat(".gif", "image/gif");
+            }
+            if (isWebp(header)) {
+                return new DetectedImageFormat(".webp", "image/webp");
+            }
+
+            return null;
+        } catch (IOException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Impossible de lire le fichier image");
+        }
     }
+
+    private String normalizeContentType(String contentType) {
+        String normalized = contentType.toLowerCase(Locale.ROOT).trim();
+        if ("image/jpg".equals(normalized)) {
+            return "image/jpeg";
+        }
+        return normalized;
+    }
+
+    private boolean isPng(byte[] header) {
+        return header.length >= 8
+                && (header[0] & 0xFF) == 0x89
+                && header[1] == 0x50
+                && header[2] == 0x4E
+                && header[3] == 0x47
+                && header[4] == 0x0D
+                && header[5] == 0x0A
+                && header[6] == 0x1A
+                && header[7] == 0x0A;
+    }
+
+    private boolean isJpeg(byte[] header) {
+        return header.length >= 3
+                && (header[0] & 0xFF) == 0xFF
+                && (header[1] & 0xFF) == 0xD8
+                && (header[2] & 0xFF) == 0xFF;
+    }
+
+    private boolean isGif(byte[] header) {
+        return header.length >= 6
+                && header[0] == 0x47
+                && header[1] == 0x49
+                && header[2] == 0x46
+                && header[3] == 0x38
+                && (header[4] == 0x37 || header[4] == 0x39)
+                && header[5] == 0x61;
+    }
+
+    private boolean isWebp(byte[] header) {
+        return header.length >= 12
+                && header[0] == 0x52
+                && header[1] == 0x49
+                && header[2] == 0x46
+                && header[3] == 0x46
+                && header[8] == 0x57
+                && header[9] == 0x45
+                && header[10] == 0x42
+                && header[11] == 0x50;
+    }
+
+    private record DetectedImageFormat(String extension, String contentType) {}
 
     private UserResponse convertUserToResponse(User user) {
         List<String> roleNames = user.getRoles().stream()

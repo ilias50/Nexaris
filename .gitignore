@@ -19,6 +19,14 @@
 **/logs/
 *.log
 
+# Local uploaded files
+auth-service/data/profile-images/*
+!auth-service/data/profile-images/.gitkeep
+
+# Local TLS certificates
+certs/*.pem
+certs/*.key
+
 # IDE / OS
 .idea/
 .vscode/

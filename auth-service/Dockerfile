@@ -21,7 +21,7 @@ COPY --from=build /app/target/*.jar app.jar
 RUN addgroup -S spring && adduser -S spring -G spring
 
 # Création du répertoire logs
-RUN mkdir -p logs && chown -R spring:spring logs
+RUN mkdir -p logs /tmp/nexaris/uploads/profile-images && chown -R spring:spring logs /tmp/nexaris/uploads
 
 USER spring:spring
 
