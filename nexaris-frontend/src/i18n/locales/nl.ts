@@ -22,7 +22,7 @@ const nl = {
     themeToggle: 'Thema wisselen',
   },
   locale: {
-    fr: 'Francais',
+    fr: 'Frans',
     en: 'English',
     nl: 'Nederlands',
     de: 'Deutsch',
@@ -745,7 +745,7 @@ const nl = {
       WARNING: 'Aandacht vereist, mogelijke impact op sommige leden.',
       CRITICAL: 'Kritieke situatie, onmiddellijke actie vereist.',
       MAINTENANCE: 'Gepland onderhoud, tijdelijke onderbreking van de dienst.',
-      INCIDENT: 'Incident aan de gang dat de operaties beinvloedt.',
+      INCIDENT: 'Incident aan de gang dat de operaties beïnvloedt.',
     },
     scopeDescriptions: {
       NODE: 'Alleen zichtbaar voor directe leden van dit knooppunt.',

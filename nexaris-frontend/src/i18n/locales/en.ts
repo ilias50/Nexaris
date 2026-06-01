@@ -22,7 +22,7 @@ const en = {
     themeToggle: 'Toggle theme',
   },
   locale: {
-    fr: 'Francais',
+    fr: 'Français',
     en: 'English',
     nl: 'Nederlands',
     de: 'Deutsch',
@@ -270,7 +270,7 @@ const en = {
   adminCompany: {
     title: 'Company information',
     navLabel: 'Company (admin)',
-    subtitle: 'Configure your organization general information.',
+    subtitle: 'Configure your organization\'s general information.',
     nameLabel: 'Company name',
     namePlaceholder: 'e.g. Nexaris Ltd',
     addressLabel: 'Address',

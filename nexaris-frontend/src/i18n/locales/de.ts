@@ -9,9 +9,9 @@ const de = {
     logout: 'Abmelden',
   },
   locale: {
-    fr: 'Franzosisch',
+    fr: 'Französisch',
     en: 'Englisch',
-    nl: 'Niederlandisch',
+    nl: 'Niederländisch',
     de: 'Deutsch',
   },
   login: {
@@ -23,7 +23,7 @@ const de = {
     ...en.register,
     subtitle: 'Erstellen Sie Ihr Nexaris-Konto',
     submit: 'Konto erstellen',
-    backToLogin: 'Zuruck zur Anmeldung',
+    backToLogin: 'Zurück zur Anmeldung',
   },
 }
 
