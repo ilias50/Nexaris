@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/ilias50/Nexaris/compare/nexaris-v0.2.0...nexaris-v0.2.1) (2026-06-01)
+
+
+### Bug Fixes
+
+* correction orthographe ([c6d031a](https://github.com/ilias50/Nexaris/commit/c6d031a35a760c51503319cc7fe9988aa1ea4601))
+
 ## [0.2.0](https://github.com/ilias50/Nexaris/compare/nexaris-v0.1.5...nexaris-v0.2.0) (2026-05-31)
 
 
