@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/ilias50/Nexaris/compare/nexaris-v0.2.1...nexaris-v0.2.2) (2026-06-02)
+
+
+### Bug Fixes
+
+* correction de bug et suppresion de données inutile et suppresion de la db de holidays ([e0b1a2f](https://github.com/ilias50/Nexaris/commit/e0b1a2f2cca0dd3d07f5f72523a31d20c41c5de0))
+
 ## [0.2.1](https://github.com/ilias50/Nexaris/compare/nexaris-v0.2.0...nexaris-v0.2.1) (2026-06-01)
 
 
