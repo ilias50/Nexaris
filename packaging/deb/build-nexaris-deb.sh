@@ -171,7 +171,6 @@ case "${SERVICE_NAME}" in
     ;;
   holiday-proxy-service)
     export SERVER_PORT="${HOLIDAY_PROXY_SERVICE_PORT}"
-    export SPRING_DATASOURCE_URL="${HOLIDAY_PROXY_DB_URL}"
     ;;
   notification-service)
     export SERVER_PORT="${NOTIFICATION_SERVICE_PORT}"
@@ -301,7 +300,6 @@ DB_PASSWORD="$(grep -E '^SPRING_DATASOURCE_PASSWORD=' /etc/nexaris/nexaris.env |
 AUTH_DB_NAME="$(grep -E '^AUTH_DB_NAME=' /etc/nexaris/nexaris.env | cut -d= -f2- || true)"
 ORG_DB_NAME="$(grep -E '^ORG_DB_NAME=' /etc/nexaris/nexaris.env | cut -d= -f2- || true)"
 PLANNING_DB_NAME="$(grep -E '^PLANNING_DB_NAME=' /etc/nexaris/nexaris.env | cut -d= -f2- || true)"
-HOLIDAY_PROXY_DB_NAME="$(grep -E '^HOLIDAY_PROXY_DB_NAME=' /etc/nexaris/nexaris.env | cut -d= -f2- || true)"
 NOTIFICATION_DB_NAME="$(grep -E '^NOTIFICATION_DB_NAME=' /etc/nexaris/nexaris.env | cut -d= -f2- || true)"
 
 DB_HOST="${DB_HOST:-127.0.0.1}"
@@ -314,7 +312,6 @@ fi
 AUTH_DB_NAME="${AUTH_DB_NAME:-nexaris_authservice}"
 ORG_DB_NAME="${ORG_DB_NAME:-nexaris_orgservice}"
 PLANNING_DB_NAME="${PLANNING_DB_NAME:-nexaris_planningservice}"
-HOLIDAY_PROXY_DB_NAME="${HOLIDAY_PROXY_DB_NAME:-nexaris_holidayproxyservice}"
 NOTIFICATION_DB_NAME="${NOTIFICATION_DB_NAME:-nexaris_notificationservice}"
 
 set_env_value DB_HOST "${DB_HOST}"
@@ -324,7 +321,6 @@ set_env_value SPRING_DATASOURCE_PASSWORD "${DB_PASSWORD}"
 set_env_value AUTH_DB_URL "jdbc:mysql://${DB_HOST}:${DB_PORT}/${AUTH_DB_NAME}?createDatabaseIfNotExist=true"
 set_env_value ORG_DB_URL "jdbc:mysql://${DB_HOST}:${DB_PORT}/${ORG_DB_NAME}?createDatabaseIfNotExist=true"
 set_env_value PLANNING_DB_URL "jdbc:mysql://${DB_HOST}:${DB_PORT}/${PLANNING_DB_NAME}?createDatabaseIfNotExist=true"
-set_env_value HOLIDAY_PROXY_DB_URL "jdbc:mysql://${DB_HOST}:${DB_PORT}/${HOLIDAY_PROXY_DB_NAME}?createDatabaseIfNotExist=true"
 set_env_value NOTIFICATION_DB_URL "jdbc:mysql://${DB_HOST}:${DB_PORT}/${NOTIFICATION_DB_NAME}?createDatabaseIfNotExist=true"
 
 # Valeurs par defaut utiles en mode natif (si non surchargees manuellement).
@@ -343,7 +339,6 @@ if command -v mysql >/dev/null 2>&1; then
   AUTH_DB_NAME_SQL="$(sql_escape "${AUTH_DB_NAME}")"
   ORG_DB_NAME_SQL="$(sql_escape "${ORG_DB_NAME}")"
   PLANNING_DB_NAME_SQL="$(sql_escape "${PLANNING_DB_NAME}")"
-  HOLIDAY_PROXY_DB_NAME_SQL="$(sql_escape "${HOLIDAY_PROXY_DB_NAME}")"
   NOTIFICATION_DB_NAME_SQL="$(sql_escape "${NOTIFICATION_DB_NAME}")"
 
   PROVISION_SQL="
@@ -352,13 +347,11 @@ CREATE USER IF NOT EXISTS '${DB_USER_SQL}'@'%' IDENTIFIED BY '${DB_PASSWORD_SQL}
 CREATE DATABASE IF NOT EXISTS \`${AUTH_DB_NAME_SQL}\`;
 CREATE DATABASE IF NOT EXISTS \`${ORG_DB_NAME_SQL}\`;
 CREATE DATABASE IF NOT EXISTS \`${PLANNING_DB_NAME_SQL}\`;
-CREATE DATABASE IF NOT EXISTS \`${HOLIDAY_PROXY_DB_NAME_SQL}\`;
 CREATE DATABASE IF NOT EXISTS \`${NOTIFICATION_DB_NAME_SQL}\`;
 
 GRANT ALL PRIVILEGES ON \`${AUTH_DB_NAME_SQL}\`.* TO '${DB_USER_SQL}'@'%';
 GRANT ALL PRIVILEGES ON \`${ORG_DB_NAME_SQL}\`.* TO '${DB_USER_SQL}'@'%';
 GRANT ALL PRIVILEGES ON \`${PLANNING_DB_NAME_SQL}\`.* TO '${DB_USER_SQL}'@'%';
-GRANT ALL PRIVILEGES ON \`${HOLIDAY_PROXY_DB_NAME_SQL}\`.* TO '${DB_USER_SQL}'@'%';
 GRANT ALL PRIVILEGES ON \`${NOTIFICATION_DB_NAME_SQL}\`.* TO '${DB_USER_SQL}'@'%';
 
 FLUSH PRIVILEGES;

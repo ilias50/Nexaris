@@ -1,16 +1,6 @@
 spring:
   application:
     name: holiday-proxy-service
-  datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: root
-    password: root
-  jpa:
-    hibernate:
-      ddl-auto: validate
-  flyway:
-    enabled: true
-    baseline-on-migrate: true
 
 gateway:
   internal:

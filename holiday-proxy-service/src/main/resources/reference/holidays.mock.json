@@ -1,68 +1,351 @@
 {
   "FR": {
+    "2025": {
+      "holidays": [
+        {
+          "date": "2025-01-01",
+          "name": "Jour de l'an",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2025-04-21",
+          "name": "Lundi de Paques",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2025-05-01",
+          "name": "Fete du Travail",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2025-05-08",
+          "name": "Victoire 1945",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2025-05-29",
+          "name": "Ascension",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2025-06-09",
+          "name": "Lundi de Pentecote",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2025-07-14",
+          "name": "Fete nationale",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2025-08-15",
+          "name": "Assomption",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2025-11-01",
+          "name": "Toussaint",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2025-11-11",
+          "name": "Armistice",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2025-12-25",
+          "name": "Noel",
+          "type": "PUBLIC_HOLIDAY"
+        }
+      ],
+      "schoolVacations": []
+    },
     "2026": {
       "holidays": [
         {
           "date": "2026-01-01",
-          "name": "New Year",
+          "name": "Jour de l'an",
           "type": "PUBLIC_HOLIDAY"
         },
         {
           "date": "2026-04-06",
-          "name": "Easter Monday",
+          "name": "Lundi de Paques",
           "type": "PUBLIC_HOLIDAY"
         },
         {
           "date": "2026-05-01",
-          "name": "Labour Day",
+          "name": "Fete du Travail",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2026-05-08",
+          "name": "Victoire 1945",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2026-05-14",
+          "name": "Ascension",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2026-05-25",
+          "name": "Lundi de Pentecote",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2026-07-14",
+          "name": "Fete nationale",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2026-08-15",
+          "name": "Assomption",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2026-11-01",
+          "name": "Toussaint",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2026-11-11",
+          "name": "Armistice",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2026-12-25",
+          "name": "Noel",
           "type": "PUBLIC_HOLIDAY"
         }
       ],
-      "schoolVacations": [
+      "schoolVacations": []
+    },
+    "2027": {
+      "holidays": [
         {
-          "date": "2026-02-16",
-          "name": "Winter Break",
-          "type": "SCHOOL_VACATION"
+          "date": "2027-01-01",
+          "name": "Jour de l'an",
+          "type": "PUBLIC_HOLIDAY"
         },
         {
-          "date": "2026-07-01",
-          "name": "Summer Break",
-          "type": "SCHOOL_VACATION"
+          "date": "2027-03-29",
+          "name": "Lundi de Paques",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2027-05-01",
+          "name": "Fete du Travail",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2027-05-06",
+          "name": "Ascension",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2027-05-08",
+          "name": "Victoire 1945",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2027-05-17",
+          "name": "Lundi de Pentecote",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2027-07-14",
+          "name": "Fete nationale",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2027-08-15",
+          "name": "Assomption",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2027-11-01",
+          "name": "Toussaint",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2027-11-11",
+          "name": "Armistice",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2027-12-25",
+          "name": "Noel",
+          "type": "PUBLIC_HOLIDAY"
         }
-      ]
+      ],
+      "schoolVacations": []
     }
   },
   "BE": {
+    "2025": {
+      "holidays": [
+        {
+          "date": "2025-01-01",
+          "name": "Jour de l'an",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2025-04-21",
+          "name": "Lundi de Paques",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2025-05-01",
+          "name": "Fete du Travail",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2025-05-29",
+          "name": "Ascension",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2025-06-09",
+          "name": "Lundi de Pentecote",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2025-07-21",
+          "name": "Fete nationale belge",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2025-08-15",
+          "name": "Assomption",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2025-11-01",
+          "name": "Toussaint",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2025-11-11",
+          "name": "Armistice",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2025-12-25",
+          "name": "Noel",
+          "type": "PUBLIC_HOLIDAY"
+        }
+      ],
+      "schoolVacations": []
+    },
     "2026": {
       "holidays": [
         {
           "date": "2026-01-01",
-          "name": "New Year",
+          "name": "Jour de l'an",
           "type": "PUBLIC_HOLIDAY"
         },
         {
           "date": "2026-04-06",
-          "name": "Easter Monday",
+          "name": "Lundi de Paques",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2026-05-01",
+          "name": "Fete du Travail",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2026-05-14",
+          "name": "Ascension",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2026-05-25",
+          "name": "Lundi de Pentecote",
           "type": "PUBLIC_HOLIDAY"
         },
         {
           "date": "2026-07-21",
-          "name": "National Day",
+          "name": "Fete nationale belge",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2026-08-15",
+          "name": "Assomption",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2026-11-01",
+          "name": "Toussaint",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2026-11-11",
+          "name": "Armistice",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2026-12-25",
+          "name": "Noel",
           "type": "PUBLIC_HOLIDAY"
         }
       ],
-      "schoolVacations": [
+      "schoolVacations": []
+    },
+    "2027": {
+      "holidays": [
         {
-          "date": "2026-02-23",
-          "name": "Carnival Break",
-          "type": "SCHOOL_VACATION"
+          "date": "2027-01-01",
+          "name": "Jour de l'an",
+          "type": "PUBLIC_HOLIDAY"
         },
         {
-          "date": "2026-07-01",
-          "name": "Summer Break",
-          "type": "SCHOOL_VACATION"
+          "date": "2027-03-29",
+          "name": "Lundi de Paques",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2027-05-01",
+          "name": "Fete du Travail",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2027-05-06",
+          "name": "Ascension",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2027-05-17",
+          "name": "Lundi de Pentecote",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2027-07-21",
+          "name": "Fete nationale belge",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2027-08-15",
+          "name": "Assomption",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2027-11-01",
+          "name": "Toussaint",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2027-11-11",
+          "name": "Armistice",
+          "type": "PUBLIC_HOLIDAY"
+        },
+        {
+          "date": "2027-12-25",
+          "name": "Noel",
+          "type": "PUBLIC_HOLIDAY"
         }
-      ]
+      ],
+      "schoolVacations": []
     }
   }
 }

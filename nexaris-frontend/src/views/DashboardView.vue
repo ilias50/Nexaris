@@ -11,7 +11,7 @@ const { t } = useI18n()
   <AppLayout :title="t('dashboard.title')">
     <div class="dashboard">
       <div class="dashboard__welcome">
-        <h2>{{ t('dashboard.welcomePrefix') }}, {{ auth.fullName }} 👋</h2>
+        <h2>{{ t('dashboard.welcomePrefix') }}, {{ auth.fullName }}</h2>
         <p>{{ t('dashboard.welcomeMessage') }}</p>
       </div>
 
