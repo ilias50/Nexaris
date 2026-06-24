@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.3](https://github.com/ilias50/Nexaris/compare/nexaris-v0.2.2...nexaris-v0.2.3) (2026-06-24)
+
+
+### Bug Fixes
+
+* ajout button delete pour role planning corection de mode sombre ([37487fb](https://github.com/ilias50/Nexaris/commit/37487fba2c6c21f3ed8c2c10a012ba8a9b8f15f7))
+
 ## [0.2.2](https://github.com/ilias50/Nexaris/compare/nexaris-v0.2.1...nexaris-v0.2.2) (2026-06-02)
 
 
