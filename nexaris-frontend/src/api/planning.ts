@@ -190,6 +190,10 @@ export const planningApi = {
     return apiClient.put<PlanningRole>(`/api/v1/planning/admin/roles/${encodeURIComponent(roleName)}/permissions`, payload)
   },
 
+  deletePlanningRole(roleName: string) {
+    return apiClient.delete(`/api/v1/planning/admin/roles/${encodeURIComponent(roleName)}`)
+  },
+
   assignPlanningRoleToUser(targetUserId: number, roleName: string) {
     return apiClient.post<void>(`/api/v1/planning/admin/users/${targetUserId}/roles/${encodeURIComponent(roleName)}`)
   },

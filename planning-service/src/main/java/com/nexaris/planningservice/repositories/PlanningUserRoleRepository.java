@@ -12,4 +12,6 @@ public interface PlanningUserRoleRepository extends JpaRepository<PlanningUserRo
     boolean existsByUserIdAndPlanningRole(Integer userId, String planningRole);
 
     void deleteByUserIdAndPlanningRole(Integer userId, String planningRole);
+
+    void deleteByPlanningRole(String planningRole);
 }

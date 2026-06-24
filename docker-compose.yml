@@ -47,8 +47,6 @@ services:
       - PROFILE_IMAGES_DIR=/data/profile-images
       - NOTIFICATION_SERVICE_URL=${NOTIFICATION_SERVICE_URL}
       - NOTIFICATION_EMAIL_ENDPOINT=${NOTIFICATION_EMAIL_ENDPOINT}
-    ports:
-      - "8081:8080"
     volumes:
       - ./auth-service/data/profile-images:/data/profile-images
     depends_on:

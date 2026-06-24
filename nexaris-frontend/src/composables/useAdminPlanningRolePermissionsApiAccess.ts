@@ -13,6 +13,10 @@ export function useAdminPlanningRolePermissionsApiAccess() {
     return planningApi.createPlanningRole({ roleName })
   }
 
+  async function deletePlanningRole(roleName: string) {
+    return planningApi.deletePlanningRole(roleName)
+  }
+
   async function replaceRolePermissions(roleName: string, permissions: string[]) {
     return planningApi.replacePlanningRolePermissions(roleName, { permissions })
   }
@@ -21,6 +25,7 @@ export function useAdminPlanningRolePermissionsApiAccess() {
     getPlanningRoles,
     getAvailablePermissions,
     addPlanningRole,
+    deletePlanningRole,
     replaceRolePermissions,
   }
 }

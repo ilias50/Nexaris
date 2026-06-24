@@ -172,6 +172,19 @@ public class PlanningRoleAdminService {
         planningUserRoleRepository.deleteByUserIdAndPlanningRole(targetUserId, normalizedRoleName);
     }
 
+    @Transactional
+    public void deleteRole(Integer requesterUserId, String rolesHeader, String roleName) {
+        requireAdmin(requesterUserId, rolesHeader);
+
+        String normalizedRoleName = normalizeRoleName(roleName);
+        PlanningRole role = planningRoleRepository.findByRoleName(normalizedRoleName)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Role planning introuvable"));
+
+        planningUserRoleRepository.deleteByPlanningRole(normalizedRoleName);
+        planningRolePermissionRepository.deleteByPlanningRole(normalizedRoleName);
+        planningRoleRepository.delete(role);
+    }
+
     private void requireAdmin(Integer requesterUserId, String rolesHeader) {
         if (requesterUserId == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "X-User-Id est obligatoire");

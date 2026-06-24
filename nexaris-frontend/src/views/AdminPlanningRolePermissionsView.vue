@@ -92,6 +92,24 @@ async function addRole() {
   }
 }
 
+async function deleteRole() {
+  if (!selectedRole.value) return
+
+  saving.value = true
+  saveError.value = ''
+  saveSuccess.value = ''
+  try {
+    await planningRoleApi.deletePlanningRole(selectedRole.value)
+    saveSuccess.value = t('adminPlanningRolePermissions.messages.roleDeleted')
+    await loadBaseData()
+    selectedPermissions.value = []
+  } catch {
+    saveError.value = t('adminPlanningRolePermissions.errors.deleteRole')
+  } finally {
+    saving.value = false
+  }
+}
+
 async function savePermissions() {
   if (!selectedRole.value) return
 
@@ -144,6 +162,11 @@ onMounted(async () => {
             />
             <BaseButton type="button" @click="addRole">
               {{ t('adminPlanningRolePermissions.addRole') }}
+            </BaseButton>
+          </div>
+          <div v-if="hasSelection" class="aprp__delete-row">
+            <BaseButton type="button" variant="danger" :loading="saving" :disabled="saving" @click="deleteRole">
+              {{ t('adminPlanningRolePermissions.deleteRole') }}
             </BaseButton>
           </div>
         </section>
@@ -220,6 +243,11 @@ onMounted(async () => {
   grid-template-columns: 1fr auto;
   gap: 0.6rem;
   align-items: end;
+}
+.aprp__delete-row {
+  margin-top: 0.75rem;
+  display: flex;
+  justify-content: flex-end;
 }
 .aprp__input {
   width: 100%;

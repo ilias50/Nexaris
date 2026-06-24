@@ -113,6 +113,16 @@ public class PlanningController {
         return planningRoleAdminService.getUserRoles(requesterUserId, rolesHeader, targetUserId);
     }
 
+    @DeleteMapping("/admin/roles/{roleName}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletePlanningRole(
+            @PathVariable String roleName,
+            @RequestHeader(name = "X-User-Id", required = false) Integer requesterUserId,
+            @RequestHeader(name = "X-User-Roles", required = false) String rolesHeader
+    ) {
+        planningRoleAdminService.deleteRole(requesterUserId, rolesHeader, roleName);
+    }
+
     @DeleteMapping("/admin/users/{targetUserId}/roles/{roleName}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void revokePlanningRoleFromUser(

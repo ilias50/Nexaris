@@ -5,7 +5,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useI18n } from '@/i18n'
 import BaseInput from '@/components/BaseInput.vue'
 import BaseButton from '@/components/BaseButton.vue'
-import { getApiErrorStatus } from '@/utils/apiError'
+import { getApiErrorStatus, getApiValidationErrors } from '@/utils/apiError'
 import { resolveApiErrorMessage } from '@/utils/apiErrorMessage'
 import { useRegisterApiAccess } from '@/composables/useRegisterApiAccess'
 import { passwordsMatch } from '@/utils/validation'
@@ -26,6 +26,57 @@ const loadingStatus = ref(true)
 const registrationEnabled = ref(false)
 const success = ref('')
 const error = ref('')
+const fieldErrors = ref<Partial<Record<'firstName' | 'lastName' | 'email' | 'password' | 'confirmPassword', string>>>({})
+
+function clearErrors() {
+  error.value = ''
+  success.value = ''
+  fieldErrors.value = {}
+}
+
+function getFirstFieldError() {
+  const order: Array<keyof typeof fieldErrors.value> = ['firstName', 'lastName', 'email', 'password', 'confirmPassword']
+  for (const key of order) {
+    const message = fieldErrors.value[key]
+    if (message) return message
+  }
+  return ''
+}
+
+function validateRegistrationForm() {
+  fieldErrors.value = {}
+
+  if (!firstName.value.trim()) {
+    fieldErrors.value.firstName = t('register.firstNameRequired')
+  }
+  if (!lastName.value.trim()) {
+    fieldErrors.value.lastName = t('register.lastNameRequired')
+  }
+  if (!email.value.trim()) {
+    fieldErrors.value.email = t('register.emailRequired')
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+    fieldErrors.value.email = t('register.emailInvalid')
+  }
+  if (!password.value) {
+    fieldErrors.value.password = t('register.passwordRequired')
+  } else if (password.value.length < 8) {
+    fieldErrors.value.password = t('register.passwordTooShort')
+  }
+  if (!confirmPassword.value) {
+    fieldErrors.value.confirmPassword = t('register.confirmPasswordRequired')
+  }
+  if (password.value && confirmPassword.value && !passwordsMatch(password.value, confirmPassword.value)) {
+    fieldErrors.value.confirmPassword = t('register.passwordMismatch')
+  }
+
+  const firstError = getFirstFieldError()
+  if (firstError) {
+    error.value = firstError
+    return false
+  }
+
+  return true
+}
 
 async function loadRegistrationStatus() {
   loadingStatus.value = true
@@ -39,30 +90,41 @@ async function loadRegistrationStatus() {
 }
 
 async function handleRegister() {
+  clearErrors()
+
   if (!registrationEnabled.value) {
     error.value = t('register.closed')
     return
   }
 
-  if (!passwordsMatch(password.value, confirmPassword.value)) {
-    error.value = t('register.passwordMismatch')
+  if (!validateRegistrationForm()) {
     return
   }
 
   loading.value = true
-  success.value = ''
-  error.value = ''
 
   try {
     await registerApi.register({
-      firstName: firstName.value,
-      lastName: lastName.value,
-      email: email.value,
+      firstName: firstName.value.trim(),
+      lastName: lastName.value.trim(),
+      email: email.value.trim(),
       password: password.value,
     })
-    await auth.login({ email: email.value, password: password.value })
+    await auth.login({ email: email.value.trim(), password: password.value })
     await router.push('/dashboard')
   } catch (apiError: unknown) {
+    const validationErrors = getApiValidationErrors(apiError)
+    if (validationErrors) {
+      fieldErrors.value = {
+        firstName: validationErrors.firstName,
+        lastName: validationErrors.lastName,
+        email: validationErrors.email,
+        password: validationErrors.password,
+      }
+      error.value = getFirstFieldError() || t('register.genericError')
+      return
+    }
+
     const status = getApiErrorStatus(apiError)
     if (status === 403) {
       error.value = t('register.closed')
@@ -104,30 +166,35 @@ onMounted(loadRegistrationStatus)
           :label="t('register.firstNameLabel')"
           type="text"
           :placeholder="t('register.firstNamePlaceholder')"
+          :error="fieldErrors.firstName"
         />
         <BaseInput
           v-model="lastName"
           :label="t('register.lastNameLabel')"
           type="text"
           :placeholder="t('register.lastNamePlaceholder')"
+          :error="fieldErrors.lastName"
         />
         <BaseInput
           v-model="email"
           :label="t('register.emailLabel')"
           type="email"
           :placeholder="t('register.emailPlaceholder')"
+          :error="fieldErrors.email"
         />
         <BaseInput
           v-model="password"
           :label="t('register.passwordLabel')"
           type="password"
           :placeholder="t('register.passwordPlaceholder')"
+          :error="fieldErrors.password"
         />
         <BaseInput
           v-model="confirmPassword"
           :label="t('register.confirmPasswordLabel')"
           type="password"
           :placeholder="t('register.passwordPlaceholder')"
+          :error="fieldErrors.confirmPassword"
         />
 
         <p v-if="error" class="register-card__error">{{ error }}</p>

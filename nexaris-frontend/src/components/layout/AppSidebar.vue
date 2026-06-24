@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useI18n } from '@/i18n'
 import { useRouter } from 'vue-router'
@@ -21,6 +21,9 @@ const selectedLocale = computed({
   set: (next: string) => setLocale(next),
 })
 
+const languageMenuOpen = ref(false)
+const languageMenuRef = ref<HTMLElement | null>(null)
+
 const profileImageSrc = computed(() => {
   return resolveProfileImageUrl(auth.user?.profileImageUrl, apiBaseUrl)
 })
@@ -37,6 +40,38 @@ watch(
 
 const { theme, toggleTheme, init } = useTheme()
 onMounted(init)
+
+function toggleLanguageMenu() {
+  languageMenuOpen.value = !languageMenuOpen.value
+}
+
+function closeLanguageMenu() {
+  languageMenuOpen.value = false
+}
+
+function selectLocale(localeCode: string) {
+  selectedLocale.value = localeCode
+  closeLanguageMenu()
+}
+
+function handleLanguageMenuClickOutside(event: MouseEvent) {
+  if (!languageMenuRef.value) {
+    return
+  }
+
+  const target = event.target as Node | null
+  if (target && !languageMenuRef.value.contains(target)) {
+    closeLanguageMenu()
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleLanguageMenuClickOutside)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleLanguageMenuClickOutside)
+})
 
 async function handleLogout() {
   await auth.logout()
@@ -126,13 +161,38 @@ function handleBrandLogoError() {
 
     <div class="sidebar__language">
       <label for="language-select" class="sidebar__language-label">{{ t('nav.language') }}</label>
-      <div class="sidebar__language-control">
-        <select id="language-select" v-model="selectedLocale" class="sidebar__language-select">
-          <option v-for="localeCode in availableLocales" :key="localeCode" :value="localeCode">
-            {{ getLocaleLabel(localeCode) }}
-          </option>
-        </select>
-        <span class="sidebar__language-chevron" aria-hidden="true">▾</span>
+      <div ref="languageMenuRef" class="sidebar__language-control">
+        <button
+          id="language-select"
+          type="button"
+          class="sidebar__language-select"
+          :aria-expanded="languageMenuOpen"
+          aria-haspopup="listbox"
+          @click="toggleLanguageMenu"
+        >
+          <span>{{ getLocaleLabel(selectedLocale) }}</span>
+          <span class="sidebar__language-chevron" aria-hidden="true">▾</span>
+        </button>
+
+        <ul
+          v-if="languageMenuOpen"
+          class="sidebar__language-dropdown"
+          role="listbox"
+          :aria-labelledby="'language-select'"
+        >
+          <li
+            v-for="localeCode in availableLocales"
+            :key="localeCode"
+            class="sidebar__language-option"
+            :class="{ 'sidebar__language-option--active': localeCode === selectedLocale }"
+            role="option"
+            :aria-selected="localeCode === selectedLocale"
+          >
+            <button type="button" class="sidebar__language-option-btn" @click="selectLocale(localeCode)">
+              {{ getLocaleLabel(localeCode) }}
+            </button>
+          </li>
+        </ul>
       </div>
     </div>
 
@@ -269,8 +329,13 @@ function handleBrandLogoError() {
   color: #f1f5f9;
   border: 1px solid rgba(148, 163, 184, 0.35);
   border-radius: var(--radius-sm);
-  padding: 0.5rem 1.8rem 0.5rem 0.6rem;
+  padding: 0.5rem 0.6rem;
   font-size: 0.82rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  text-align: left;
   transition: border-color var(--transition), box-shadow var(--transition);
 }
 
@@ -278,6 +343,50 @@ function handleBrandLogoError() {
   outline: none;
   border-color: rgba(96, 165, 250, 0.75);
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.sidebar__language-dropdown {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 0.3rem);
+  margin: 0;
+  padding: 0.25rem;
+  list-style: none;
+  background: #0f172a;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 12px 30px rgba(2, 6, 23, 0.6);
+  z-index: 30;
+}
+
+.sidebar__language-option {
+  margin: 0;
+}
+
+.sidebar__language-option-btn {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: #f1f5f9;
+  text-align: left;
+  padding: 0.46rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.sidebar__language-option-btn:hover {
+  background: rgba(148, 163, 184, 0.16);
+}
+
+.sidebar__language-option-btn:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.45);
+  outline-offset: 1px;
+}
+
+.sidebar__language-option--active .sidebar__language-option-btn {
+  background: rgba(37, 99, 235, 0.28);
 }
 
 .sidebar__language-chevron {
