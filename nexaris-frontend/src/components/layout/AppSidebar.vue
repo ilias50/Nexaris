@@ -86,15 +86,17 @@ function handleBrandLogoError() {
 <template>
   <aside class="sidebar">
     <div class="sidebar__brand">
-      <img
-        v-if="hasBrandLogo"
-        :src="brandLogoSrc"
-        alt="Nexaris"
-        class="sidebar__logo"
-        @error="handleBrandLogoError"
-      />
-      <span v-else class="sidebar__logo sidebar__logo--fallback">N</span>
-      <span class="sidebar__name">{{ t('app.name') }}</span>
+      <RouterLink to="/dashboard" class="sidebar__brand-link" :aria-label="t('nav.dashboard')">
+        <img
+          v-if="hasBrandLogo"
+          :src="brandLogoSrc"
+          alt="Nexaris"
+          class="sidebar__logo"
+          @error="handleBrandLogoError"
+        />
+        <span v-else class="sidebar__logo sidebar__logo--fallback">N</span>
+        <span class="sidebar__name">{{ t('app.name') }}</span>
+      </RouterLink>
     </div>
 
     <nav class="sidebar__nav">
@@ -244,6 +246,13 @@ function handleBrandLogoError() {
   padding: 0 0.5rem 1.25rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   margin-bottom: 1rem;
+}
+
+.sidebar__brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  text-decoration: none;
 }
 
 .sidebar__logo {

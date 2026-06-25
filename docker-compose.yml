@@ -44,11 +44,11 @@ services:
       - APP_BOOTSTRAP_ADMIN_PASSWORD=${APP_BOOTSTRAP_ADMIN_PASSWORD}
       - APP_BOOTSTRAP_ADMIN_FIRST_NAME=${APP_BOOTSTRAP_ADMIN_FIRST_NAME:-System}
       - APP_BOOTSTRAP_ADMIN_LAST_NAME=${APP_BOOTSTRAP_ADMIN_LAST_NAME:-Admin}
-      - PROFILE_IMAGES_DIR=/data/profile-images
+      - PROFILE_IMAGES_DIR=/tmp/nexaris/uploads/profile-images
       - NOTIFICATION_SERVICE_URL=${NOTIFICATION_SERVICE_URL}
       - NOTIFICATION_EMAIL_ENDPOINT=${NOTIFICATION_EMAIL_ENDPOINT}
     volumes:
-      - ./auth-service/data/profile-images:/data/profile-images
+      - auth-uploads-data:/tmp/nexaris/uploads
     depends_on:
       nexaris-db:
         condition: service_healthy
@@ -175,3 +175,4 @@ networks:
 
 volumes:
   nexaris-db-data:
+  auth-uploads-data:
