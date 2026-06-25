@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.4](https://github.com/ilias50/Nexaris/compare/nexaris-v0.2.3...nexaris-v0.2.4) (2026-06-25)
+
+
+### Bug Fixes
+
+* volumes docker et taille upload image corrigé ajout du logo clicable ([b218876](https://github.com/ilias50/Nexaris/commit/b218876860ed67e1648f0fb7d0b07e689d5f6560))
+
 ## [0.2.3](https://github.com/ilias50/Nexaris/compare/nexaris-v0.2.2...nexaris-v0.2.3) (2026-06-24)
 
 
