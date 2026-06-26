@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import BaseButton from '@/components/BaseButton.vue'
@@ -23,6 +23,7 @@ const loading = ref(false)
 const error = ref('')
 const search = ref('')
 const editableNodeIds = ref<number[]>([])
+const permissionsByNodeId = ref<Record<number, string[]>>({})
 const nodeCounters = ref<Record<number, { links: number; announcements: number }>>({})
 const nodeTypeColors = ref<Record<string, string>>({})
 const expandedById = ref<Record<number, boolean>>({})
@@ -89,8 +90,26 @@ function canManageNode(nodeId: number) {
   return auth.isAdmin || canEditNode(nodeId)
 }
 
+function normalizePermission(permission: string) {
+  return permission.trim().toUpperCase()
+}
+
+function hasNodePermission(nodeId: number, permission: string) {
+  if (auth.isAdmin) return true
+  const normalizedPermission = normalizePermission(permission)
+  return (permissionsByNodeId.value[nodeId] ?? []).includes(normalizedPermission)
+}
+
+function canCreateChildUnderNode(nodeId: number) {
+  return hasNodePermission(nodeId, 'CREATE_CHILD')
+}
+
+function canRenameNode(nodeId: number) {
+  return hasNodePermission(nodeId, 'EDIT_CONTENT')
+}
+
 function canDeleteNode(nodeId: number) {
-  return canManageNode(nodeId) && (parentById.value[nodeId] ?? null) !== null
+  return hasNodePermission(nodeId, 'DELETE_NODE') && (parentById.value[nodeId] ?? null) !== null
 }
 
 function collectEditableIds(nodes: MyOrgTreeNode[]): number[] {
@@ -209,19 +228,24 @@ const selectedNodePath = computed(() => {
 })
 
 const totalVisibleNodes = computed(() => flattenTree(tree.value).length)
-const manageableParentNodes = computed(() => {
-  return flattenTree(tree.value).filter((node) => canManageNode(node.id))
+const creatableParentNodes = computed(() => {
+  return flattenTree(tree.value).filter((node) => canCreateChildUnderNode(node.id))
 })
-const canShowTopCreateButton = computed(() => manageableParentNodes.value.length > 0)
+const canShowTopCreateButton = computed(() => creatableParentNodes.value.length > 0)
 const selectedCreateParentLabel = computed(() => {
   if (createParentId.value === null) return '-'
   const node = nodeById.value[createParentId.value]
   if (!node) return '-'
   return `${node.name} (${node.nodeType})`
 })
-const canManageSelectedNode = computed(() => {
+const canCreateChildSelectedNode = computed(() => {
   if (!selectedNode.value) return false
-  return canManageNode(selectedNode.value.id)
+  return canCreateChildUnderNode(selectedNode.value.id)
+})
+
+const canRenameSelectedNode = computed(() => {
+  if (!selectedNode.value) return false
+  return canRenameNode(selectedNode.value.id)
 })
 
 const canDeleteSelectedNode = computed(() => {
@@ -254,20 +278,20 @@ function resetManageState() {
 }
 
 function openCreateWithParentPicker() {
-  if (!manageableParentNodes.value.length) return
+  if (!creatableParentNodes.value.length) return
   showRenameForm.value = false
   createFormMode.value = 'top'
   createName.value = ''
   createType.value = nodeTypeOptions.value[0] ?? 'DEPARTMENT'
-  createParentId.value = selectedNode.value && canManageNode(selectedNode.value.id)
+  createParentId.value = selectedNode.value && canCreateChildUnderNode(selectedNode.value.id)
     ? selectedNode.value.id
-    : manageableParentNodes.value[0]?.id ?? null
+    : creatableParentNodes.value[0]?.id ?? null
   createError.value = ''
   showCreateForm.value = true
 }
 
 function openCreateForNode(nodeId: number) {
-  if (!canManageNode(nodeId)) return
+  if (!canCreateChildUnderNode(nodeId)) return
   showRenameForm.value = false
   createFormMode.value = 'inline'
   createParentId.value = nodeId
@@ -278,7 +302,7 @@ function openCreateForNode(nodeId: number) {
 }
 
 function openRenameForNode(nodeId: number) {
-  if (!canManageNode(nodeId)) return
+  if (!canRenameNode(nodeId)) return
   const node = nodeById.value[nodeId]
   if (!node) return
   showCreateForm.value = false
@@ -290,7 +314,7 @@ function openRenameForNode(nodeId: number) {
 
 async function submitCreateNode() {
   if (isBlank(createName.value) || createParentId.value === null) return
-  if (!canManageNode(createParentId.value)) {
+  if (!canCreateChildUnderNode(createParentId.value)) {
     createError.value = t('adminOrg.errors.createNode')
     return
   }
@@ -333,7 +357,7 @@ async function submitCreateNode() {
 
 async function submitRenameNode() {
   if (!selectedNode.value || isBlank(renameName.value)) return
-  if (!canManageNode(selectedNode.value.id)) {
+  if (!canRenameNode(selectedNode.value.id)) {
     renameError.value = t('adminOrg.errors.renameNode')
     return
   }
@@ -427,11 +451,31 @@ async function loadNodeCounters() {
   }
 }
 
+async function loadNodePermissions() {
+  const allNodes = flattenTree(tree.value)
+  const nextPermissions: Record<number, string[]> = {}
+
+  try {
+    await Promise.all(allNodes.map(async (node) => {
+      try {
+        const { data } = await orgTreeApi.getMyPermissions(node.id)
+        nextPermissions[node.id] = (data.permissions ?? []).map(normalizePermission).filter(Boolean)
+      } catch {
+        nextPermissions[node.id] = []
+      }
+    }))
+    permissionsByNodeId.value = nextPermissions
+  } catch {
+    permissionsByNodeId.value = {}
+  }
+}
+
 async function loadTree() {
   loading.value = true
   error.value = ''
   deleteError.value = ''
   editableNodeIds.value = []
+  permissionsByNodeId.value = {}
   try {
     const workspace = await orgTreeApi.getMyTreeWorkspace()
     const data = normalizeHierarchyOrder(workspace.tree)
@@ -444,7 +488,7 @@ async function loadTree() {
     editableNodeIds.value = collectEditableIds(data)
     selectedNodeId.value = data[0]?.id ?? null
     resetManageState()
-    await loadNodeCounters()
+    await Promise.all([loadNodeCounters(), loadNodePermissions()])
   } catch {
     error.value = t('org.loadError')
   } finally {
@@ -454,6 +498,13 @@ async function loadTree() {
 
 onMounted(async () => {
   await Promise.all([loadTree(), loadNodeTypes()])
+})
+
+watch(selectedNodeId, () => {
+  if (!selectedNode.value) return
+  if (!canCreateChildUnderNode(selectedNode.value.id) && createParentId.value === selectedNode.value.id) {
+    showCreateForm.value = false
+  }
 })
 </script>
 
@@ -503,7 +554,7 @@ onMounted(async () => {
               class="ov__manage-select"
               @change="createParentId = Number(($event.target as HTMLSelectElement).value)"
             >
-              <option v-for="parentNode in manageableParentNodes" :key="parentNode.id" :value="parentNode.id">
+              <option v-for="parentNode in creatableParentNodes" :key="parentNode.id" :value="parentNode.id">
                 {{ parentNode.name }} ({{ parentNode.nodeType }})
               </option>
             </select>
@@ -609,12 +660,12 @@ onMounted(async () => {
                   @click="openNodeForEdit(selectedNode.id)"
                 >✎ {{ t('org.editNodeAction') }}</button>
                 <button
-                  v-if="canManageSelectedNode"
+                  v-if="canCreateChildSelectedNode"
                   class="ov__btn ov__btn--manage"
                   @click="openCreateForNode(selectedNode.id)"
                 >＋ {{ t('adminOrg.addChildNode') }}</button>
                 <button
-                  v-if="canManageSelectedNode"
+                  v-if="canRenameSelectedNode"
                   class="ov__btn ov__btn--manage"
                   @click="openRenameForNode(selectedNode.id)"
                 >✎ {{ t('adminOrg.renameNodeAction') }}</button>

@@ -6,6 +6,10 @@ export function useOrgTreeApiAccess() {
     return orgApi.getMyTreeWorkspace()
   }
 
+  async function getMyPermissions(nodeId: number) {
+    return orgApi.getMyPermissions(nodeId)
+  }
+
   async function getNodeLinks(nodeId: number, activeOnly = true) {
     return orgApi.getNodeLinks(nodeId, activeOnly)
   }
@@ -16,6 +20,7 @@ export function useOrgTreeApiAccess() {
 
   return {
     getMyTreeWorkspace,
+    getMyPermissions,
     getNodeLinks,
     getNodeAnnouncements,
   }
