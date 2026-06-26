@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.7](https://github.com/ilias50/Nexaris/compare/nexaris-v0.2.6...nexaris-v0.2.7) (2026-06-26)
+
+
+### Bug Fixes
+
+* correction beug changement type noeud ([28016eb](https://github.com/ilias50/Nexaris/commit/28016eb2c97d4c63f848cc28137479716ccb33bf))
+
 ## [0.2.6](https://github.com/ilias50/Nexaris/compare/nexaris-v0.2.5...nexaris-v0.2.6) (2026-06-26)
 
 
