@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.5](https://github.com/ilias50/Nexaris/compare/nexaris-v0.2.4...nexaris-v0.2.5) (2026-06-26)
+
+
+### Bug Fixes
+
+* ajout button delete pour tag planning ([225d709](https://github.com/ilias50/Nexaris/commit/225d7098651931c16fef09b30451ce9d580eb71e))
+
 ## [0.2.4](https://github.com/ilias50/Nexaris/compare/nexaris-v0.2.3...nexaris-v0.2.4) (2026-06-25)
 
 
