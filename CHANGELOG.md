@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.8](https://github.com/ilias50/Nexaris/compare/nexaris-v0.2.7...nexaris-v0.2.8) (2026-06-26)
+
+
+### Bug Fixes
+
+* correction button front ([e6d2c7a](https://github.com/ilias50/Nexaris/commit/e6d2c7a3eed9e65c6a3acb50e94afb740296c129))
+
 ## [0.2.7](https://github.com/ilias50/Nexaris/compare/nexaris-v0.2.6...nexaris-v0.2.7) (2026-06-26)
 
 
