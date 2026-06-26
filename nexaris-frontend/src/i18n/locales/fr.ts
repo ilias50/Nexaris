@@ -261,6 +261,9 @@ const fr = {
     blockingHelp: 'Si coché, le tag bloque le créneau. Si non coché, il sert surtout à classer ou à informer.',
     activeLabel: 'Tag actif',
     createButton: 'Créer le tag',
+    deleteButton: 'Supprimer le tag',
+    cancelButton: 'Annuler',
+    confirmDelete: 'Supprimer le tag "{name}" ?',
     changeColorLabel: 'Changer la couleur',
     loading: 'Chargement des tags...',
     empty: 'Aucun tag de planning configuré.',
@@ -272,6 +275,7 @@ const fr = {
     messages: {
       loadError: 'Impossible de charger les tags.',
       saveError: "Impossible d'enregistrer le tag.",
+      deleteError: 'Impossible de supprimer le tag.',
     },
   },
   adminCompany: {

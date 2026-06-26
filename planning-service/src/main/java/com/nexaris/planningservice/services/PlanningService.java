@@ -209,6 +209,15 @@ public class PlanningService {
         return toTagResponse(planningTagRepository.save(tag));
     }
 
+    @Transactional
+    public void deleteTag(Long tagId) {
+        PlanningTag tag = planningTagRepository.findById(tagId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag introuvable"));
+
+        tag.setActive(false);
+        planningTagRepository.save(tag);
+    }
+
     public List<PlanningTagResponse> listActiveTags() {
         return planningTagRepository.findByActiveTrueOrderByNameAsc()
                 .stream()

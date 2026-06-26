@@ -261,6 +261,9 @@ const en = {
     blockingHelp: 'When checked, the tag blocks the slot. When unchecked, it mainly classifies or informs.',
     activeLabel: 'Active tag',
     createButton: 'Create tag',
+    deleteButton: 'Delete tag',
+    cancelButton: 'Cancel',
+    confirmDelete: 'Delete tag "{name}"?',
     changeColorLabel: 'Change color',
     loading: 'Loading tags...',
     empty: 'No planning tags configured yet.',
@@ -272,6 +275,7 @@ const en = {
     messages: {
       loadError: 'Unable to load tags.',
       saveError: 'Unable to save the tag.',
+      deleteError: 'Unable to delete the tag.',
     },
   },
   adminCompany: {

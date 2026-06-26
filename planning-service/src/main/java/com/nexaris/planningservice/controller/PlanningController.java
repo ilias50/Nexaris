@@ -206,6 +206,12 @@ public class PlanningController {
         return planningService.updateTagColor(tagId, color);
     }
 
+    @DeleteMapping("/tags/{tagId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteTag(@PathVariable Long tagId) {
+        planningService.deleteTag(tagId);
+    }
+
     @GetMapping("/users/{userId}/entries")
     public List<AgendaEntryResponse> getUserEntries(
             @PathVariable Integer userId,

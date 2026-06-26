@@ -150,6 +150,10 @@ export const planningApi = {
     })
   },
 
+  deleteTag(tagId: number) {
+    return apiClient.delete(`/api/v1/planning/tags/${tagId}`)
+  },
+
   getPreferences(userId: number) {
     return apiClient.get<UserPreference>(`/api/v1/planning/users/${userId}/preferences`)
   },

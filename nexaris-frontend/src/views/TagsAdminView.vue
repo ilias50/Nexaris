@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import BaseButton from '@/components/BaseButton.vue'
 import BaseInput from '@/components/BaseInput.vue'
+import ConfirmDialog from '@/components/ConfirmDialog.vue'
 import { useI18n } from '@/i18n'
 import { useTagsAdminApiAccess, type AdminUser, type PlanningTag } from '@/composables/useTagsAdminApiAccess'
 import { formatUserDisplayName } from '@/utils/users'
@@ -16,6 +17,9 @@ const users = ref<AdminUser[]>([])
 const loading = ref(false)
 const error = ref('')
 const creating = ref(false)
+const deletingTagIds = ref<number[]>([])
+const showDeleteConfirm = ref(false)
+const tagPendingDeletion = ref<PlanningTag | null>(null)
 
 const name = ref('')
 const description = ref('')
@@ -74,6 +78,48 @@ async function changeTagColor(tag: PlanningTag, nextColor: string) {
   } catch {
     error.value = t('tagsAdmin.messages.saveError')
   }
+}
+
+function isDeletingTag(tagId: number) {
+  return deletingTagIds.value.includes(tagId)
+}
+
+function askDeleteTagConfirmation(tag: PlanningTag) {
+  tagPendingDeletion.value = tag
+  showDeleteConfirm.value = true
+}
+
+function cancelDeleteTagConfirmation() {
+  showDeleteConfirm.value = false
+  tagPendingDeletion.value = null
+}
+
+async function confirmDeleteTag() {
+  const tag = tagPendingDeletion.value
+  if (!tag) return
+
+  deletingTagIds.value = [...deletingTagIds.value, tag.id]
+  error.value = ''
+  try {
+    await tagsApi.deleteTag(tag.id)
+    tags.value = tags.value.filter((entry) => entry.id !== tag.id)
+    showDeleteConfirm.value = false
+    tagPendingDeletion.value = null
+  } catch {
+    error.value = t('tagsAdmin.messages.deleteError')
+  } finally {
+    deletingTagIds.value = deletingTagIds.value.filter((id) => id !== tag.id)
+  }
+}
+
+function deleteConfirmMessage() {
+  if (!tagPendingDeletion.value) return ''
+  return t('tagsAdmin.confirmDelete').replace('{name}', tagPendingDeletion.value.name)
+}
+
+function isConfirmDeleting() {
+  if (!tagPendingDeletion.value) return false
+  return isDeletingTag(tagPendingDeletion.value.id)
 }
 
 function colorStyle(tag: PlanningTag) {
@@ -163,9 +209,31 @@ onMounted(async () => {
               :title="t('tagsAdmin.changeColorLabel')"
               @change="changeTagColor(tag, ($event.target as HTMLInputElement).value)"
             />
+            <BaseButton
+              type="button"
+              variant="danger"
+              size="sm"
+              :loading="isDeletingTag(tag.id)"
+              :disabled="isDeletingTag(tag.id)"
+              @click="askDeleteTagConfirmation(tag)"
+            >
+              {{ t('tagsAdmin.deleteButton') }}
+            </BaseButton>
           </div>
         </div>
       </section>
+
+      <ConfirmDialog
+        v-model="showDeleteConfirm"
+        :title="t('tagsAdmin.deleteButton')"
+        :message="deleteConfirmMessage()"
+        :confirm-text="t('tagsAdmin.deleteButton')"
+        :cancel-text="t('tagsAdmin.cancelButton')"
+        confirm-variant="danger"
+        :loading="isConfirmDeleting()"
+        @cancel="cancelDeleteTagConfirmation"
+        @confirm="confirmDeleteTag"
+      />
     </div>
   </AppLayout>
 </template>
@@ -325,7 +393,7 @@ onMounted(async () => {
 .tag-admin__color-box {
   display: grid;
   gap: 0.25rem;
-  justify-items: end;
+  justify-items: start;
 }
 
 .tag-admin__hint {

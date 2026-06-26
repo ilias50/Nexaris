@@ -261,6 +261,9 @@ const nl = {
     blockingHelp: 'Aangevinkt betekent dat de tag het tijdslot blokkeert. Niet aangevinkt betekent vooral categoriseren of informeren.',
     activeLabel: 'Actieve tag',
     createButton: 'Tag aanmaken',
+    deleteButton: 'Tag verwijderen',
+    cancelButton: 'Annuleren',
+    confirmDelete: 'Tag "{name}" verwijderen?',
     changeColorLabel: 'Kleur wijzigen',
     loading: 'Tags laden...',
     empty: 'Nog geen planning-tags geconfigureerd.',
@@ -272,6 +275,7 @@ const nl = {
     messages: {
       loadError: 'Tags konden niet worden geladen.',
       saveError: 'Tag kon niet worden opgeslagen.',
+      deleteError: 'Tag kon niet worden verwijderd.',
     },
   },
   adminCompany: {

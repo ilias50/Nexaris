@@ -261,6 +261,9 @@ const de = {
     blockingHelp: 'Wenn aktiviert, blockiert das Tag den Slot. Wenn deaktiviert, klassifiziert oder informiert es hauptsaechlich.',
     activeLabel: 'Aktives Tag',
     createButton: 'Tag erstellen',
+    deleteButton: 'Tag loeschen',
+    cancelButton: 'Abbrechen',
+    confirmDelete: 'Tag "{name}" loeschen?',
     changeColorLabel: 'Farbe aendern',
     loading: 'Tags werden geladen...',
     empty: 'Noch keine Planungs-Tags konfiguriert.',
@@ -272,6 +275,7 @@ const de = {
     messages: {
       loadError: 'Tags konnten nicht geladen werden.',
       saveError: 'Tag konnte nicht gespeichert werden.',
+      deleteError: 'Tag konnte nicht geloescht werden.',
     },
   },
   adminCompany: {
