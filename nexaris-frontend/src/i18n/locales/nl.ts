@@ -316,6 +316,7 @@ const nl = {
     nodeNamePlaceholder: 'Bijv. HR-afdeling',
     nodeTypeLabel: 'Type',
     nodeTypes: {
+      COMPANY: 'Bedrijf',
       ORGANIZATION: 'Organisatie',
       DIVISION: 'Divisie',
       DEPARTMENT: 'Afdeling',

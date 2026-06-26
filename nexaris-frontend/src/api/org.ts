@@ -49,6 +49,7 @@ export interface CreateNodeRequest {
 }
 
 export interface UpdateNodeRequest {
+  nodeType?: string
   name?: string
   isActive?: boolean
 }

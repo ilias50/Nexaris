@@ -316,6 +316,7 @@ const de = {
     nodeNamePlaceholder: 'z.B. Personalabteilung',
     nodeTypeLabel: 'Typ',
     nodeTypes: {
+      COMPANY: 'Unternehmen',
       ORGANIZATION: 'Organisation',
       DIVISION: 'Bereich',
       DEPARTMENT: 'Abteilung',

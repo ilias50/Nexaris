@@ -316,6 +316,7 @@ const fr = {
     nodeNamePlaceholder: 'Ex: Département RH',
     nodeTypeLabel: 'Type',
     nodeTypes: {
+      COMPANY: 'Entreprise',
       ORGANIZATION: 'Organisation',
       DIVISION: 'Division',
       DEPARTMENT: 'Département',

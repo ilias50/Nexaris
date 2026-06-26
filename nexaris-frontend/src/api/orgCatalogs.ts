@@ -11,7 +11,7 @@ const STORAGE_KEY = 'nexaris_org_catalogs'
 
 const DEFAULT_CATALOGS: OrgCatalogs = {
   accessRuleRoles: [...DEFAULT_ACCESS_RULE_ROLES],
-  nodeTypes: ['ORGANIZATION', 'DIVISION', 'DEPARTMENT', 'TEAM', 'UNIT'],
+  nodeTypes: ['COMPANY', 'ORGANIZATION', 'DIVISION', 'DEPARTMENT', 'TEAM', 'UNIT'],
   linkCategories: ['GENERAL', 'TOOLS', 'DOCS', 'HR', 'FINANCE', 'IT'],
   announcementSeverities: ['INFO', 'WARNING', 'CRITICAL', 'MAINTENANCE', 'INCIDENT'],
 }

@@ -41,6 +41,7 @@ const createError = ref('')
 
 const showRenameForm = ref(false)
 const renameName = ref('')
+const renameType = ref('DEPARTMENT')
 const renameLoading = ref(false)
 const renameError = ref('')
 
@@ -56,6 +57,7 @@ interface TreeRow {
 }
 
 const DEFAULT_TYPE_COLORS: Record<string, string> = {
+  COMPANY: '#3b82f6',
   ORGANIZATION: '#3b82f6',
   DIVISION: '#3b82f6',
   DEPARTMENT: '#0ea5e9',
@@ -281,6 +283,7 @@ function openRenameForNode(nodeId: number) {
   if (!node) return
   showCreateForm.value = false
   renameName.value = node.name
+  renameType.value = node.nodeType
   renameError.value = ''
   showRenameForm.value = true
 }
@@ -339,7 +342,10 @@ async function submitRenameNode() {
   renameError.value = ''
   try {
     const nodeId = selectedNode.value.id
-    await adminOrgApi.updateNode(nodeId, { name: trimOrEmpty(renameName.value) })
+    await adminOrgApi.updateNode(nodeId, {
+      name: trimOrEmpty(renameName.value),
+      nodeType: renameType.value,
+    })
     await loadTree()
     selectedNodeId.value = nodeId
     showRenameForm.value = false
@@ -390,6 +396,9 @@ async function loadNodeTypes() {
 
   if (!nodeTypeOptions.value.includes(createType.value)) {
     createType.value = nodeTypeOptions.value[0] ?? 'DEPARTMENT'
+  }
+  if (!nodeTypeOptions.value.includes(renameType.value)) {
+    renameType.value = nodeTypeOptions.value[0] ?? 'DEPARTMENT'
   }
 }
 
@@ -653,6 +662,12 @@ onMounted(async () => {
                   type="text"
                   :placeholder="t('adminOrg.nodeNamePlaceholder')"
                 />
+                <div class="ov__manage-field">
+                  <label class="ov__manage-label">{{ t('adminOrg.nodeTypeLabel') }}</label>
+                  <select v-model="renameType" class="ov__manage-select">
+                    <option v-for="tp in nodeTypeOptions" :key="tp" :value="tp">{{ tp }}</option>
+                  </select>
+                </div>
                 <p v-if="renameError" class="ov__error">{{ renameError }}</p>
                 <div class="ov__manage-actions">
                   <BaseButton type="button" variant="ghost" @click="showRenameForm = false">

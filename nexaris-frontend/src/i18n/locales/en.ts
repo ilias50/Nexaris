@@ -316,6 +316,7 @@ const en = {
     nodeNamePlaceholder: 'e.g. HR Department',
     nodeTypeLabel: 'Type',
     nodeTypes: {
+      COMPANY: 'Company',
       ORGANIZATION: 'Organization',
       DIVISION: 'Division',
       DEPARTMENT: 'Department',
