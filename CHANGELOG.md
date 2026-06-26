@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.6](https://github.com/ilias50/Nexaris/compare/nexaris-v0.2.5...nexaris-v0.2.6) (2026-06-26)
+
+
+### Bug Fixes
+
+* ajout button switch bloquant ou non  pour tag planning ([ab1feed](https://github.com/ilias50/Nexaris/commit/ab1feeda409234e34f19f5eeed24aec6a7c6a525))
+
 ## [0.2.5](https://github.com/ilias50/Nexaris/compare/nexaris-v0.2.4...nexaris-v0.2.5) (2026-06-26)
 
 
