@@ -263,6 +263,8 @@ const en = {
     createButton: 'Create tag',
     deleteButton: 'Delete tag',
     cancelButton: 'Cancel',
+    makeBlockingButton: 'Set as blocking',
+    makeNonBlockingButton: 'Set as non-blocking',
     confirmDelete: 'Delete tag "{name}"?',
     changeColorLabel: 'Change color',
     loading: 'Loading tags...',

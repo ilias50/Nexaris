@@ -150,6 +150,10 @@ export const planningApi = {
     })
   },
 
+  updateTagBlocking(tagId: number, blocking: boolean) {
+    return apiClient.put<PlanningTag>(`/api/v1/planning/tags/${tagId}/blocking`, blocking)
+  },
+
   deleteTag(tagId: number) {
     return apiClient.delete(`/api/v1/planning/tags/${tagId}`)
   },

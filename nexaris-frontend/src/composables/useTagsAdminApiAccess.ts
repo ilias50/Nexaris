@@ -16,6 +16,10 @@ export function useTagsAdminApiAccess() {
     return planningApi.updateTagColor(tagId, color)
   }
 
+  async function updateTagBlocking(tagId: number, blocking: boolean) {
+    return planningApi.updateTagBlocking(tagId, blocking)
+  }
+
   async function deleteTag(tagId: number) {
     await planningApi.deleteTag(tagId)
   }
@@ -28,6 +32,7 @@ export function useTagsAdminApiAccess() {
     getTags,
     createTag,
     updateTagColor,
+    updateTagBlocking,
     deleteTag,
     listUsersSafe,
   }

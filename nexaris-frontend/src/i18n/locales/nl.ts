@@ -263,6 +263,8 @@ const nl = {
     createButton: 'Tag aanmaken',
     deleteButton: 'Tag verwijderen',
     cancelButton: 'Annuleren',
+    makeBlockingButton: 'Instellen als blokkerend',
+    makeNonBlockingButton: 'Instellen als niet-blokkerend',
     confirmDelete: 'Tag "{name}" verwijderen?',
     changeColorLabel: 'Kleur wijzigen',
     loading: 'Tags laden...',

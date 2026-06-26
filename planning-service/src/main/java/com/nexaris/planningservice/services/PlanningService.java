@@ -210,6 +210,19 @@ public class PlanningService {
     }
 
     @Transactional
+    public PlanningTagResponse updateTagBlocking(Long tagId, Boolean blocking) {
+        if (blocking == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "blocking est obligatoire");
+        }
+
+        PlanningTag tag = planningTagRepository.findById(tagId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag introuvable"));
+
+        tag.setBlocking(blocking);
+        return toTagResponse(planningTagRepository.save(tag));
+    }
+
+    @Transactional
     public void deleteTag(Long tagId) {
         PlanningTag tag = planningTagRepository.findById(tagId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tag introuvable"));

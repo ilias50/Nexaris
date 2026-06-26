@@ -206,6 +206,12 @@ public class PlanningController {
         return planningService.updateTagColor(tagId, color);
     }
 
+    @PutMapping("/tags/{tagId}/blocking")
+    public PlanningTagResponse updateTagBlocking(@PathVariable Long tagId,
+                                                 @RequestBody(required = false) Boolean blocking) {
+        return planningService.updateTagBlocking(tagId, blocking);
+    }
+
     @DeleteMapping("/tags/{tagId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTag(@PathVariable Long tagId) {

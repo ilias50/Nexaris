@@ -263,6 +263,8 @@ const de = {
     createButton: 'Tag erstellen',
     deleteButton: 'Tag loeschen',
     cancelButton: 'Abbrechen',
+    makeBlockingButton: 'Als blockierend setzen',
+    makeNonBlockingButton: 'Als nicht blockierend setzen',
     confirmDelete: 'Tag "{name}" loeschen?',
     changeColorLabel: 'Farbe aendern',
     loading: 'Tags werden geladen...',

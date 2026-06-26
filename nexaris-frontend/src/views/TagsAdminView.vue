@@ -18,6 +18,7 @@ const loading = ref(false)
 const error = ref('')
 const creating = ref(false)
 const deletingTagIds = ref<number[]>([])
+const togglingBlockingTagIds = ref<number[]>([])
 const showDeleteConfirm = ref(false)
 const tagPendingDeletion = ref<PlanningTag | null>(null)
 
@@ -82,6 +83,26 @@ async function changeTagColor(tag: PlanningTag, nextColor: string) {
 
 function isDeletingTag(tagId: number) {
   return deletingTagIds.value.includes(tagId)
+}
+
+function isTogglingTagBlocking(tagId: number) {
+  return togglingBlockingTagIds.value.includes(tagId)
+}
+
+async function toggleTagBlocking(tag: PlanningTag) {
+  if (isTogglingTagBlocking(tag.id)) return
+
+  togglingBlockingTagIds.value = [...togglingBlockingTagIds.value, tag.id]
+  error.value = ''
+  try {
+    const { data } = await tagsApi.updateTagBlocking(tag.id, !tag.blocking)
+    const index = tags.value.findIndex((entry) => entry.id === tag.id)
+    if (index !== -1) tags.value[index] = data
+  } catch {
+    error.value = t('tagsAdmin.messages.saveError')
+  } finally {
+    togglingBlockingTagIds.value = togglingBlockingTagIds.value.filter((id) => id !== tag.id)
+  }
 }
 
 function askDeleteTagConfirmation(tag: PlanningTag) {
@@ -209,6 +230,16 @@ onMounted(async () => {
               :title="t('tagsAdmin.changeColorLabel')"
               @change="changeTagColor(tag, ($event.target as HTMLInputElement).value)"
             />
+            <BaseButton
+              type="button"
+              variant="secondary"
+              size="sm"
+              :loading="isTogglingTagBlocking(tag.id)"
+              :disabled="isTogglingTagBlocking(tag.id)"
+              @click="toggleTagBlocking(tag)"
+            >
+              {{ tag.blocking ? t('tagsAdmin.makeNonBlockingButton') : t('tagsAdmin.makeBlockingButton') }}
+            </BaseButton>
             <BaseButton
               type="button"
               variant="danger"

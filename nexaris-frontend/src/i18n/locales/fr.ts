@@ -263,6 +263,8 @@ const fr = {
     createButton: 'Créer le tag',
     deleteButton: 'Supprimer le tag',
     cancelButton: 'Annuler',
+    makeBlockingButton: 'Passer en bloquant',
+    makeNonBlockingButton: 'Passer en non bloquant',
     confirmDelete: 'Supprimer le tag "{name}" ?',
     changeColorLabel: 'Changer la couleur',
     loading: 'Chargement des tags...',
